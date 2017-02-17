@@ -117,7 +117,8 @@ default
 		lastUserInteractionKey = llDetectedKey(0);
 		IsUserOnline();
 		if (isUserOnline) {
-			llRegionSayTo(lastUserInteractionKey, 0, "Please type your message on channle 30 I.E /30 <message> ");
+			llTextBox(lastUserInteractionKey, "Please type your message here', 30);
+			//llRegionSayTo(lastUserInteractionKey, 0, "Please type your message on channle 30 I.E /30 <message> ");
 			listenHandle = llListen(30, "", lastUserInteractionKey, "");
 			currentlyListening = 1;
 		}
