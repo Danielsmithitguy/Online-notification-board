@@ -116,14 +116,19 @@ default
 	{
 		lastUserInteractionKey = llDetectedKey(0);
 		IsUserOnline();
-		if (isUserOnline) {
-			llTextBox(lastUserInteractionKey, "Please type your message here', 30);
-			//llRegionSayTo(lastUserInteractionKey, 0, "Please type your message on channle 30 I.E /30 <message> ");
-			listenHandle = llListen(30, "", lastUserInteractionKey, "");
-			currentlyListening = 1;
+		if (lastUserInteractionKey != userKey) {
+			state ownerInteraction;
 		}
 		else {
-			llRegionSayTo(lastUserInteractionKey, 0, "User is currently offline, please try again later");
+			if (isUserOnline) {
+				llTextBox(lastUserInteractionKey, "Please type your message here", 30);
+				//llRegionSayTo(lastUserInteractionKey, 0, "Please type your message on channle 30 I.E /30 <message> ");
+				listenHandle = llListen(30, "", lastUserInteractionKey, "");
+				currentlyListening = 1;
+			}
+			else {
+				llRegionSayTo(lastUserInteractionKey, 0, "User is currently offline, please try again later");
+			}
 		}
 	}
 	timer()
@@ -146,9 +151,21 @@ default
 	}
 	listen(integer channel, string name, key id, string message)
 	{
-		llInstantMessage( userKey, message );
+		//llInstantMessage( userKey, message );
+		llMessageLinked(LINK_THIS, 0, message, id);
 		llRegionSayTo(lastUserInteractionKey, 0, "thank you, your message has been sent");
 		llListenRemove(listenHandle);
 		currentlyListening = 0;
 	}
+}
+state ownerInteraction
+{
+    state_entry()
+    {
+
+    }
+ 
+    state_exit()
+    {
+    }
 }
