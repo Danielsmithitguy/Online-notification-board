@@ -116,7 +116,7 @@ default
 	{
 		lastUserInteractionKey = llDetectedKey(0);
 		IsUserOnline();
-		if (lastUserInteractionKey != userKey) {
+		if (lastUserInteractionKey == userKey) {
 			state ownerInteraction;
 		}
 		else {
@@ -160,12 +160,24 @@ default
 }
 state ownerInteraction
 {
-    state_entry()
-    {
+	state_entry()
+	{
+		listenHandle = llListen(30, "", lastUserInteractionKey, "");
+		llOwnerSay("Board is now in revewing message state, others will be unable to interact with the board untill Owner 'exits' the menu system");
+	}
 
-    }
- 
-    state_exit()
-    {
-    }
+	state_exit()
+	{
+		llOwnerSay("Board no longer in use by owner, resumeing normal operations");
+		llListenRemove(listenHandle);
+	}
+	listen(integer channel, string name, key id, string msg)
+	{
+		if(msg == "exit") {
+			state default;
+		}
+		else {
+			llMessageLinked(LINK_THIS, 0, msg, id);
+		}
+	}
 }
